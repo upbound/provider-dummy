@@ -1,4 +1,4 @@
-module github.com/crossplane/provider-template
+module github.com/muvaf/provider-dummy
 
 go 1.19
 

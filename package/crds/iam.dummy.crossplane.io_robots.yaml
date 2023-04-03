@@ -5,18 +5,18 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.10.0
   creationTimestamp: null
-  name: mytypes.sample.template.crossplane.io
+  name: robots.iam.dummy.crossplane.io
 spec:
-  group: sample.template.crossplane.io
+  group: iam.dummy.crossplane.io
   names:
     categories:
     - crossplane
     - managed
-    - template
-    kind: MyType
-    listKind: MyTypeList
-    plural: mytypes
-    singular: mytype
+    - dummy
+    kind: Robot
+    listKind: RobotList
+    plural: robots
+    singular: robot
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -35,7 +35,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: A MyType is an example API type.
+        description: A Robot is an example API type.
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -50,7 +50,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: A MyTypeSpec defines the desired state of a MyType.
+            description: A RobotSpec defines the desired state of a Robot.
             properties:
               deletionPolicy:
                 default: Delete
@@ -62,7 +62,7 @@ spec:
                 - Delete
                 type: string
               forProvider:
-                description: MyTypeParameters are the configurable fields of a MyType.
+                description: RobotParameters are the configurable fields of a Robot.
                 properties:
                   configurableField:
                     type: string
@@ -241,10 +241,10 @@ spec:
             - forProvider
             type: object
           status:
-            description: A MyTypeStatus represents the observed state of a MyType.
+            description: A RobotStatus represents the observed state of a Robot.
             properties:
               atProvider:
-                description: MyTypeObservation are the observable fields of a MyType.
+                description: RobotObservation are the observable fields of a Robot.
                 properties:
                   observableField:
                     type: string
