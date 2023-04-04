@@ -30,7 +30,7 @@ type Robot struct {
 	Color string `json:"color"`
 }
 
-var robots = make(map[string]Robot)
+var robots = make(map[string]*Robot)
 
 func main() { //nolint:gocyclo
 	http.HandleFunc("/robots", func(w http.ResponseWriter, r *http.Request) {
@@ -47,9 +47,8 @@ func main() { //nolint:gocyclo
 				return
 			}
 		case "POST":
-			var robot Robot
-			err := json.NewDecoder(r.Body).Decode(&robot)
-			if err != nil {
+			robot := new(Robot)
+			if err := json.NewDecoder(r.Body).Decode(robot); err != nil {
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
 			}
@@ -65,8 +64,8 @@ func main() { //nolint:gocyclo
 				http.Error(w, "Missing name parameter", http.StatusBadRequest)
 				return
 			}
-			var robot Robot
-			err := json.NewDecoder(r.Body).Decode(&robot)
+			robot := new(Robot)
+			err := json.NewDecoder(r.Body).Decode(robot)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
