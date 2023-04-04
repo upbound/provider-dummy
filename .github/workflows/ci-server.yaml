@@ -2,8 +2,10 @@ name: Build and Push Dummy Server
 on:
   push:
     branches:
-      - main
-      - release-*
+      - 'main'
+      - 'release-*'
+    tags:
+      - 'v*'
   workflow_dispatch: {}
 env:
   REGISTRY: ghcr.io
