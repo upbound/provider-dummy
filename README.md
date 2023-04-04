@@ -11,6 +11,9 @@ to run by running `go run cmd/server/main.go`.
 
 ## Getting Started
 
+**By default, this provider will do nothing since `--do-nothing` is true by default.
+Run `make dev` to see it in action or build a new package with that flag disabled.**
+
 ```bash
 # This will build two images: provider-dummy and server-dummy.
 make build

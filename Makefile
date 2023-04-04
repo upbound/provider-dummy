@@ -85,7 +85,7 @@ build.init: $(UP)
 run: go.build
 	@$(INFO) Running Crossplane locally out-of-cluster . . .
 	@# To see other arguments that can be provided, run the command with --help instead
-	$(GO_OUT_DIR)/provider --debug
+	DO_NOTHING=false $(GO_OUT_DIR)/provider --debug
 
 dev: $(KUBECTL)
 	@$(INFO) Deploying dummy server
@@ -102,7 +102,7 @@ dev: $(KUBECTL)
 	@$(KUBECTL) port-forward svc/server-dummy 8080:80 &
 	@$(OK) Port-forwarding to dummy server
 	@$(INFO) Starting Provider Dummy controllers
-	@$(GO) run cmd/provider/main.go --debug
+	@DO_NOTHING=false $(GO) run cmd/provider/main.go --debug
 
 dev-clean: $(KIND) $(KUBECTL)
 	@$(INFO) Deleting dummy server

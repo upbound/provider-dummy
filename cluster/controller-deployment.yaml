@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: controller-dummy
+  labels:
+    app: controller-dummy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: controller-dummy
+  template:
+    metadata:
+      labels:
+        app: controller-dummy
+    spec:
+      containers:
+        - name: server
+          image: xpkg.upbound.io/upbound/provider-dummy:v0.2.0
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: DO_NOTHING
+              value: "false"
+            - name: KUBECONFIG
+              value: /etc/mcp-kubeconfig
+          volumeMounts:
+            - name: mcp-kubeconfig
+              mountPath: /etc/mcp-kubeconfig
+      volumes:
+        - name: mcp-kubeconfig
+          secret:
+            secretName: mcp-kubeconfig
+---
+#
+# up ctp kubeconfig get MY_CP_NAME --account MY_ORG_NAME --token=MY_API_TOKEN --file /tmp/kube.yaml
+#
+# kubectl create secret generic mcp-kubeconfig --from-file=kubeconfig=/tmp/kube.yaml
+#
+#apiVersion: v1
+#kind: Secret
+#metadata:
+#  name: mcp-kubeconfig
+#data:
+#  kubeconfig: REPLACE_WITH_KUBECONFIG
