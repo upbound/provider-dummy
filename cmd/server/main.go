@@ -96,9 +96,9 @@ func main() { //nolint:gocyclo
 	})
 	log.Println("Listening on :8080")
 	log.Printf("Example commands:\n")
-	log.Printf("Create:\n\tcurl -XPOST -H \"Content-type: application/json\" -d '{ \"name\": \"myrobot\", \"color\": \"green\"}' 'http://127.0.0.1:8080/robots'\n")
+	log.Printf("Create:\n\tcurl -XPOST -H \"Content-type: application/json\" -d '{\"name\": \"myrobot\", \"color\": \"green\"}' 'http://127.0.0.1:8080/robots'\n")
 	log.Printf("Get:\n\tcurl 'http://127.0.0.1:8080/robots?&name=myrobot'\n")
-	log.Printf("Update:\n\tcurl -XPUT -H \"Content-type: application/json\" -d '{ \"name\": \"myrobot\", \"color\": \"yellow\"}' 'http://127.0.0.1:8080/robots?&name=myrobot'\n")
+	log.Printf("Update:\n\tcurl -XPUT -H \"Content-type: application/json\" -d '{\"name\": \"myrobot\", \"color\": \"yellow\"}' 'http://127.0.0.1:8080/robots?&name=myrobot'\n")
 	log.Printf("Delete:\n\tcurl -XDELETE 'http://127.0.0.1:8080/robots?&name=myrobot'\n")
 	s := &http.Server{
 		Addr:              ":8080",

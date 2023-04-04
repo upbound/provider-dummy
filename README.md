@@ -1,35 +1,36 @@
-# provider-dummy
+# Example Dummy Provider
 
 `provider-dummy` is a minimal [Crossplane](https://crossplane.io/) Provider
-that is meant to be used as a dummy for implementing new Providers. It comes
-with the following features that are meant to be refactored:
+that is meant to be used as an experimentation bed while developing Crossplane
+providers. It includes a [simple server implementation](cmd/server/main.go) to
+be used as its external API.
 
-- A `ProviderConfig` type that only points to a credentials `Secret`.
-- A `MyType` resource type that serves as an example managed resource.
-- A managed resource controller that reconciles `MyType` objects and simply
-  prints their configuration in its `Observe` method.
+`server-dummy` exposes a single `/robots` endpoint to interact with robots. It
+stores the data in memory and does not persist it. See example `curl` commands
+to run by running `go run cmd/server/main.go`.
 
-## Developing
+## Getting Started
 
-1. Use this repository as a dummy to create a new one.
-1. Run `make submodules` to initialize the "build" Make submodule we use for CI/CD.
-1. Rename the provider by running the follwing command:
+```bash
+# This will build two images: provider-dummy and server-dummy.
+make build
 ```
-  make provider.prepare provider={PascalProviderName}
-```
-4. Add your new type by running the following command:
-```
-make provider.addtype provider={PascalProviderName} group={group} kind={type}
-```
-5. Replace the *sample* group with your new group in apis/{provider}.go
-5. Replace the *mytype* type with your new type in internal/controller/{provider}.go
-5. Replace the default controller and ProviderConfig implementations with your own
-5. Run `make reviewable` to run code generation, linters, and tests.
-5. Run `make build` to build the provider.
 
-Refer to Crossplane's [CONTRIBUTING.md] file for more information on how the
-Crossplane community prefers to work. The [Provider Development][provider-dev]
-guide may also be of use.
+```bash
+kind create cluster --wait 5m
+```
 
-[CONTRIBUTING.md]: https://github.com/crossplane/crossplane/blob/master/CONTRIBUTING.md
-[provider-dev]: https://github.com/crossplane/crossplane/blob/master/docs/contributing/provider_development_guide.md
+```bash
+# This will deploy server-dummy and port-forward its service to localhost:8080.
+# And start the provider-dummy controller locally to connect to the server.
+make dev
+```
+
+```bash
+# Create your first Robot!
+kubectl apply -f examples/iam/robots.yaml
+```
+
+```bash
+kubectl get robots
+```
