@@ -71,7 +71,7 @@ func (c *Client) Get(ctx context.Context, name string) (*Robot, error) {
 	if resp.StatusCode == http.StatusNotFound {
 		return nil, NewNotFound()
 	}
-	if resp.StatusCode != http.StatusOK {
+	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusBadRequest {
 		return nil, fmt.Errorf("%d: %s", resp.StatusCode, string(data))
 	}
 	r := &Robot{}
@@ -100,7 +100,7 @@ func (c *Client) Create(ctx context.Context, r *Robot) error {
 	defer func() {
 		_ = resp.Body.Close()
 	}()
-	if resp.StatusCode != http.StatusOK {
+	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusBadRequest {
 		data, err := io.ReadAll(resp.Body)
 		if err != nil {
 			return errors.Wrap(err, "cannot read body")
@@ -134,7 +134,7 @@ func (c *Client) Update(ctx context.Context, r *Robot) error {
 	if resp.StatusCode == http.StatusNotFound {
 		return NewNotFound()
 	}
-	if resp.StatusCode != http.StatusOK {
+	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusBadRequest {
 		data, err := io.ReadAll(resp.Body)
 		if err != nil {
 			return errors.Wrap(err, "cannot read body")
@@ -164,7 +164,7 @@ func (c *Client) Delete(ctx context.Context, name string) error {
 	if resp.StatusCode == http.StatusNotFound {
 		return NewNotFound()
 	}
-	if resp.StatusCode != http.StatusOK {
+	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusBadRequest {
 		data, err := io.ReadAll(resp.Body)
 		if err != nil {
 			return errors.Wrap(err, "cannot read body")

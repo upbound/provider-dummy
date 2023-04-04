@@ -16,13 +16,15 @@ spec:
     spec:
       containers:
         - name: server
-          image: xpkg.upbound.io/upbound/provider-dummy:v0.2.0
+          image: xpkg.upbound.io/upbound/provider-dummy:v0.1.0-3.g24ac347
           imagePullPolicy: IfNotPresent
+          args:
+            - --debug
           env:
             - name: DO_NOTHING
               value: "false"
             - name: KUBECONFIG
-              value: /etc/mcp-kubeconfig
+              value: /etc/mcp-kubeconfig/kubeconfig
           volumeMounts:
             - name: mcp-kubeconfig
               mountPath: /etc/mcp-kubeconfig
