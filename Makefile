@@ -87,62 +87,33 @@ run: go.build
 	@# To see other arguments that can be provided, run the command with --help instead
 	$(GO_OUT_DIR)/provider --debug
 
-dev: $(KIND) $(KUBECTL)
-	@$(INFO) Creating kind cluster
-	@$(KIND) create cluster --name=$(PROJECT_NAME)-dev
-	@$(KUBECTL) cluster-info --context kind-$(PROJECT_NAME)-dev
-	@$(INFO) Installing Crossplane CRDs
-	@$(KUBECTL) apply -k https://github.com/crossplane/crossplane//cluster?ref=master
+dev: $(KUBECTL)
+	@$(INFO) Deploying dummy server
+	@$(KIND) load docker-image $(BUILD_REGISTRY)/server-dummy-$(HOSTARCH)
+	@cat cluster/server-deployment.yaml | sed 's|muvaf/server-dummy:latest|$(BUILD_REGISTRY)/server-dummy-$(HOSTARCH)|' | $(KUBECTL) apply -f -
+	@$(OK) Deploying dummy server
 	@$(INFO) Installing Provider Dummy CRDs
 	@$(KUBECTL) apply -R -f package/crds
 	@$(INFO) Starting Provider Dummy controllers
 	@$(GO) run cmd/provider/main.go --debug
 
 dev-clean: $(KIND) $(KUBECTL)
-	@$(INFO) Deleting kind cluster
-	@$(KIND) delete cluster --name=$(PROJECT_NAME)-dev
+	@$(INFO) Deleting dummy server
+	@$(KUBECTL) delete -f cluster/server-deployment.yaml
+	@$(OK) Deleting dummy server
+	@$(INFO) Deleting CRDs
+	@$(KUBECTL) delete -f package/crds
+	@$(OK) Deleting CRDs
 
 .PHONY: submodules fallthrough test-integration run dev dev-clean
 
 # ====================================================================================
 # Special Targets
 
-# Install gomplate
-GOMPLATE_VERSION := 3.10.0
-GOMPLATE := $(TOOLS_HOST_DIR)/gomplate-$(GOMPLATE_VERSION)
-
-$(GOMPLATE):
-	@$(INFO) installing gomplate $(SAFEHOSTPLATFORM)
-	@mkdir -p $(TOOLS_HOST_DIR)
-	@curl -fsSLo $(GOMPLATE) https://github.com/hairyhenderson/gomplate/releases/download/v$(GOMPLATE_VERSION)/gomplate_$(SAFEHOSTPLATFORM) || $(FAIL)
-	@chmod +x $(GOMPLATE)
-	@$(OK) installing gomplate $(SAFEHOSTPLATFORM)
-
-export GOMPLATE
-
-# This target prepares repo for your provider by replacing all "dummy"
-# occurrences with your provider name.
-# This target can only be run once, if you want to rerun for some reason,
-# consider stashing/resetting your git state.
-# Arguments:
-#   provider: Camel case name of your provider, e.g. GitHub, PlanetScale
-provider.prepare:
-	@[ "${provider}" ] || ( echo "argument \"provider\" is not set"; exit 1 )
-	@PROVIDER=$(provider) ./hack/helpers/prepare.sh
-
-# This target adds a new api type and its controller.
-# You would still need to register new api in "apis/<provider>.go" and
-# controller in "internal/controller/<provider>.go".
-# Arguments:
-#   provider: Camel case name of your provider, e.g. GitHub, PlanetScale
-#   group: API group for the type you want to add.
-#   kind: Kind of the type you want to add
-#	apiversion: API version of the type you want to add. Optional and defaults to "v1alpha1"
-provider.addtype: $(GOMPLATE)
-	@[ "${provider}" ] || ( echo "argument \"provider\" is not set"; exit 1 )
-	@[ "${group}" ] || ( echo "argument \"group\" is not set"; exit 1 )
-	@[ "${kind}" ] || ( echo "argument \"kind\" is not set"; exit 1 )
-	@PROVIDER=$(provider) GROUP=$(group) KIND=$(kind) APIVERSION=$(apiversion) ./hack/helpers/addtype.sh
+deploy-server:
+	@$(INFO) Deploying server-dummy
+	@cat cluster/server-deployment.yaml | sed 's|TAG_TO_BE_REPLACED|$(VERSION)|'
+	@$(OK) Deploying server-dummy
 
 define CROSSPLANE_MAKE_HELP
 Crossplane Targets:
