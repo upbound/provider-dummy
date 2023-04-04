@@ -19,7 +19,8 @@ spec:
           image: muvaf/server-dummy:latest
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8080
+            - name: http
+              containerPort: 8080
 ---
 apiVersion: v1
 kind: Service
@@ -29,6 +30,6 @@ spec:
   selector:
       app: server-dummy
   ports:
-    - protocol: TCP
-      port: 80
+    - port: 80
       targetPort: 8080
+      protocol: TCP

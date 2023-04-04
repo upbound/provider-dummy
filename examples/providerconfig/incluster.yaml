@@ -1,0 +1,6 @@
+apiVersion: dummy.crossplane.io/v1alpha1
+kind: ProviderConfig
+metadata:
+  name: default
+spec:
+  endpoint: http://server-dummy.default.svc.cluster.local

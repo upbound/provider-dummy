@@ -16,17 +16,17 @@ limitations under the License.
 
 package robots
 
-import "github.com/pkg/errors"
+import "errors"
+
+// NewNotFound returns a new not found error.
+func NewNotFound() error {
+	return notFound{}
+}
 
 type notFound struct{}
 
-func (n *notFound) Error() string {
+func (n notFound) Error() string {
 	return "not found"
-}
-
-func (n *notFound) As(err interface{}) bool {
-	_, ok := err.(*notFound)
-	return ok
 }
 
 // IsNotFound returns true if the given error is a not found error.

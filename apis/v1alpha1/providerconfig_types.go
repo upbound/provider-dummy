@@ -28,7 +28,7 @@ import (
 // A ProviderConfigSpec defines the desired state of a ProviderConfig.
 type ProviderConfigSpec struct {
 	// Endpoint is the API endpoint of the Dummy service.
-	// +kubectl:default="http://server-dummy"
+	// +kubebuilder:validation:Required
 	Endpoint string `json:"endpoint"`
 }
 

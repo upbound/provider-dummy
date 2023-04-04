@@ -69,7 +69,7 @@ func (c *Client) Get(ctx context.Context, name string) (*Robot, error) {
 		return nil, errors.Wrap(err, "cannot read body")
 	}
 	if resp.StatusCode == http.StatusNotFound {
-		return nil, &notFound{}
+		return nil, NewNotFound()
 	}
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("%d: %s", resp.StatusCode, string(data))
@@ -132,7 +132,7 @@ func (c *Client) Update(ctx context.Context, r *Robot) error {
 		_ = resp.Body.Close()
 	}()
 	if resp.StatusCode == http.StatusNotFound {
-		return &notFound{}
+		return NewNotFound()
 	}
 	if resp.StatusCode != http.StatusOK {
 		data, err := io.ReadAll(resp.Body)
@@ -162,7 +162,7 @@ func (c *Client) Delete(ctx context.Context, name string) error {
 		_ = resp.Body.Close()
 	}()
 	if resp.StatusCode == http.StatusNotFound {
-		return &notFound{}
+		return NewNotFound()
 	}
 	if resp.StatusCode != http.StatusOK {
 		data, err := io.ReadAll(resp.Body)

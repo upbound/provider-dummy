@@ -94,6 +94,13 @@ dev: $(KUBECTL)
 	@$(OK) Deploying dummy server
 	@$(INFO) Installing Provider Dummy CRDs
 	@$(KUBECTL) apply -R -f package/crds
+	@$(OK) Installing Provider Dummy CRDs
+	@$(INFO) Creating ProviderConfig
+	@$(KUBECTL) apply -f examples/providerconfig/local.yaml
+	@$(OK) Creating ProviderConfig
+	@$(INFO) Port-forwarding to dummy server
+	@$(KUBECTL) port-forward svc/server-dummy 8080:80 &
+	@$(OK) Port-forwarding to dummy server
 	@$(INFO) Starting Provider Dummy controllers
 	@$(GO) run cmd/provider/main.go --debug
 
@@ -101,6 +108,9 @@ dev-clean: $(KIND) $(KUBECTL)
 	@$(INFO) Deleting dummy server
 	@$(KUBECTL) delete -f cluster/server-deployment.yaml
 	@$(OK) Deleting dummy server
+	@$(INFO) Deleting Objects
+	@$(KUBECTL) delete dummy --all
+	@$(OK) Deleting Objects
 	@$(INFO) Deleting CRDs
 	@$(KUBECTL) delete -f package/crds
 	@$(OK) Deleting CRDs
