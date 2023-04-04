@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: server
-          image: muvaf/server-dummy:latest
+          image: ghcr.io/upbound/provider-dummy-server:main
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
