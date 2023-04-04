@@ -1,4 +1,4 @@
-module github.com/muvaf/provider-dummy
+module github.com/upbound/provider-dummy
 
 go 1.19
 

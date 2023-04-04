@@ -34,10 +34,10 @@ import (
 	"github.com/crossplane/crossplane-runtime/pkg/reconciler/managed"
 	"github.com/crossplane/crossplane-runtime/pkg/resource"
 
-	"github.com/muvaf/provider-dummy/apis/iam/v1alpha1"
-	apisv1alpha1 "github.com/muvaf/provider-dummy/apis/v1alpha1"
-	"github.com/muvaf/provider-dummy/internal/client/robots"
-	"github.com/muvaf/provider-dummy/internal/controller/features"
+	"github.com/upbound/provider-dummy/apis/iam/v1alpha1"
+	apisv1alpha1 "github.com/upbound/provider-dummy/apis/v1alpha1"
+	"github.com/upbound/provider-dummy/internal/client/robots"
+	"github.com/upbound/provider-dummy/internal/controller/features"
 )
 
 const (

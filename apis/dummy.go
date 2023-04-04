@@ -20,8 +20,8 @@ package apis
 import (
 	"k8s.io/apimachinery/pkg/runtime"
 
-	iamv1alpha1 "github.com/muvaf/provider-dummy/apis/iam/v1alpha1"
-	dummyv1alpha1 "github.com/muvaf/provider-dummy/apis/v1alpha1"
+	iamv1alpha1 "github.com/upbound/provider-dummy/apis/iam/v1alpha1"
+	dummyv1alpha1 "github.com/upbound/provider-dummy/apis/v1alpha1"
 )
 
 func init() {

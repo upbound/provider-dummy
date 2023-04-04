@@ -1,7 +1,7 @@
 # ====================================================================================
 # Setup Project
 PROJECT_NAME := provider-dummy
-PROJECT_REPO := github.com/muvaf/$(PROJECT_NAME)
+PROJECT_REPO := github.com/upbound/$(PROJECT_NAME)
 
 PLATFORMS ?= linux_amd64 linux_arm64
 -include build/makelib/common.mk
@@ -36,10 +36,10 @@ IMAGES = provider-dummy server-dummy
 # ====================================================================================
 # Setup XPKG
 
-XPKG_REG_ORGS ?= xpkg.upbound.io/crossplane
+XPKG_REG_ORGS ?= xpkg.upbound.io/upbound
 # NOTE(hasheddan): skip promoting on xpkg.upbound.io as channel tags are
 # inferred.
-XPKG_REG_ORGS_NO_PROMOTE ?= xpkg.upbound.io/crossplane
+XPKG_REG_ORGS_NO_PROMOTE ?= xpkg.upbound.io/upbound
 XPKGS = provider-dummy
 -include build/makelib/xpkg.mk
 
@@ -116,14 +116,6 @@ dev-clean: $(KIND) $(KUBECTL)
 	@$(OK) Deleting CRDs
 
 .PHONY: submodules fallthrough test-integration run dev dev-clean
-
-# ====================================================================================
-# Special Targets
-
-deploy-server:
-	@$(INFO) Deploying server-dummy
-	@cat cluster/server-deployment.yaml | sed 's|TAG_TO_BE_REPLACED|$(VERSION)|'
-	@$(OK) Deploying server-dummy
 
 define CROSSPLANE_MAKE_HELP
 Crossplane Targets:
