@@ -248,3 +248,6 @@ jobs:
       - name: Publish Artifacts
         if: env.UPBOUND_MARKETPLACE_PUSH_ROBOT_USR != ''
         run: make publish BRANCH_NAME=${GITHUB_REF##*/}
+
+      - name: Publish Server Dummy to GHCR
+        run: make publish.server

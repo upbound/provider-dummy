@@ -1,0 +1,29 @@
+name: Server-CI
+on:
+  push:
+    branches:
+      - main
+      - release-*
+  workflow_dispatch: {}
+env:
+  DOCKER_BUILDX_VERSION: 'v0.9.1'
+jobs:
+  publish-artifacts:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        run: make publish.server

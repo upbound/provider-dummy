@@ -30,8 +30,13 @@ GO111MODULE = on
 # ====================================================================================
 # Setup Images
 
-IMAGES = provider-dummy server-dummy
+IMAGES = provider-dummy
 -include build/makelib/imagelight.mk
+
+publish.server:
+	@$(INFO) Build and push ghcr.io/upbound/server-dummy:$(VERSION)
+	@docker buildx build --push --platform linux/amd64,linux/arm64 --tag ghcr.io/upbound/server-dummy:$(VERSION) cmd/server
+	@$(OK) Build and push ghcr.io/upbound/server-dummy:$(VERSION)
 
 # ====================================================================================
 # Setup XPKG
