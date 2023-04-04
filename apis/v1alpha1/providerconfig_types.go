@@ -27,17 +27,9 @@ import (
 
 // A ProviderConfigSpec defines the desired state of a ProviderConfig.
 type ProviderConfigSpec struct {
-	// Credentials required to authenticate to this provider.
-	Credentials ProviderCredentials `json:"credentials"`
-}
-
-// ProviderCredentials required to authenticate.
-type ProviderCredentials struct {
-	// Source of the provider credentials.
-	// +kubebuilder:validation:Enum=None;Secret;InjectedIdentity;Environment;Filesystem
-	Source xpv1.CredentialsSource `json:"source"`
-
-	xpv1.CommonCredentialSelectors `json:",inline"`
+	// Endpoint is the API endpoint of the Dummy service.
+	// +kubectl:default="http://server-dummy"
+	Endpoint string `json:"endpoint"`
 }
 
 // A ProviderConfigStatus reflects the observed state of a ProviderConfig.
@@ -50,7 +42,7 @@ type ProviderConfigStatus struct {
 // A ProviderConfig configures a Dummy provider.
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
-// +kubebuilder:printcolumn:name="SECRET-NAME",type="string",JSONPath=".spec.credentials.secretRef.name",priority=1
+// +kubebuilder:printcolumn:name="ENDPOINT",type="string",JSONPath=".spec.endpoint",priority=1
 // +kubebuilder:resource:scope=Cluster
 type ProviderConfig struct {
 	metav1.TypeMeta   `json:",inline"`

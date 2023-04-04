@@ -19,6 +19,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"time"
 )
 
 // This is a very simple server that stores and retrieves robots to a map that
@@ -31,7 +32,7 @@ type Robot struct {
 
 var robots = make(map[string]Robot)
 
-func main() {
+func main() { //nolint:gocyclo
 	http.HandleFunc("/robots", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case "GET":
@@ -95,9 +96,16 @@ func main() {
 	})
 	log.Println("Listening on :8080")
 	log.Printf("Example commands:\n")
-	log.Printf("Create: curl -XPOST -H \"Content-type: application/json\" -d '{ \"name\": \"myrobot\", \"color\": \"green\"}' 'http://127.0.0.1:8080/robots'\n")
-	log.Printf("Get: curl 'http://127.0.0.1:8080/robots?&name=myrobot'\n")
-	log.Printf("Update: curl -XPUT -H \"Content-type: application/json\" -d '{ \"name\": \"myrobot\", \"color\": \"yellow\"}' 'http://127.0.0.1:8080/robots?&name=myrobot'\n")
-	log.Printf("Delete: curl -XDELETE 'http://127.0.0.1:8080/robots?&name=myrobot'\n")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Printf("Create:\n\tcurl -XPOST -H \"Content-type: application/json\" -d '{ \"name\": \"myrobot\", \"color\": \"green\"}' 'http://127.0.0.1:8080/robots'\n")
+	log.Printf("Get:\n\tcurl 'http://127.0.0.1:8080/robots?&name=myrobot'\n")
+	log.Printf("Update:\n\tcurl -XPUT -H \"Content-type: application/json\" -d '{ \"name\": \"myrobot\", \"color\": \"yellow\"}' 'http://127.0.0.1:8080/robots?&name=myrobot'\n")
+	log.Printf("Delete:\n\tcurl -XDELETE 'http://127.0.0.1:8080/robots?&name=myrobot'\n")
+	s := &http.Server{
+		Addr:              ":8080",
+		Handler:           http.TimeoutHandler(http.DefaultServeMux, 10*time.Second, "timeout"),
+		ReadHeaderTimeout: 10 * time.Second,
+		ReadTimeout:       10 * time.Second,
+		WriteTimeout:      10 * time.Second,
+	}
+	log.Fatal(s.ListenAndServe())
 }
