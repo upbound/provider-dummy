@@ -27,13 +27,12 @@ import (
 
 // RobotParameters are the configurable fields of a Robot.
 type RobotParameters struct {
-	ConfigurableField string `json:"configurableField"`
+	// Color is the color of the robot.
+	Color string `json:"color"`
 }
 
 // RobotObservation are the observable fields of a Robot.
-type RobotObservation struct {
-	ObservableField string `json:"observableField,omitempty"`
-}
+type RobotObservation struct{}
 
 // A RobotSpec defines the desired state of a Robot.
 type RobotSpec struct {

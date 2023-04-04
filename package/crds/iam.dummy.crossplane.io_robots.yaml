@@ -64,10 +64,11 @@ spec:
               forProvider:
                 description: RobotParameters are the configurable fields of a Robot.
                 properties:
-                  configurableField:
+                  color:
+                    description: Color is the color of the robot.
                     type: string
                 required:
-                - configurableField
+                - color
                 type: object
               providerConfigRef:
                 default:
@@ -245,9 +246,6 @@ spec:
             properties:
               atProvider:
                 description: RobotObservation are the observable fields of a Robot.
-                properties:
-                  observableField:
-                    type: string
                 type: object
               conditions:
                 description: Conditions of the resource.

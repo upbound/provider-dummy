@@ -18,7 +18,6 @@ package robot
 
 import (
 	"context"
-	"fmt"
 	"net/url"
 
 	"github.com/pkg/errors"
@@ -26,15 +25,18 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
+	v1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 	"github.com/crossplane/crossplane-runtime/pkg/connection"
 	"github.com/crossplane/crossplane-runtime/pkg/controller"
 	"github.com/crossplane/crossplane-runtime/pkg/event"
+	"github.com/crossplane/crossplane-runtime/pkg/meta"
 	"github.com/crossplane/crossplane-runtime/pkg/ratelimiter"
 	"github.com/crossplane/crossplane-runtime/pkg/reconciler/managed"
 	"github.com/crossplane/crossplane-runtime/pkg/resource"
 
 	"github.com/muvaf/provider-dummy/apis/iam/v1alpha1"
 	apisv1alpha1 "github.com/muvaf/provider-dummy/apis/v1alpha1"
+	"github.com/muvaf/provider-dummy/internal/client/robots"
 	"github.com/muvaf/provider-dummy/internal/controller/features"
 )
 
@@ -102,11 +104,11 @@ func (c *connector) Connect(ctx context.Context, mg resource.Managed) (managed.E
 		return nil, errors.Wrap(err, "cannot parse given endpoint as url")
 	}
 
-	return &external{endpoint: u}, nil
+	return &external{robots.NewClient(u)}, nil
 }
 
 type external struct {
-	endpoint *url.URL
+	robots *robots.Client
 }
 
 func (c *external) Observe(ctx context.Context, mg resource.Managed) (managed.ExternalObservation, error) {
@@ -115,23 +117,19 @@ func (c *external) Observe(ctx context.Context, mg resource.Managed) (managed.Ex
 		return managed.ExternalObservation{}, errors.New(errNotRobot)
 	}
 
-	// These fmt statements should be removed in the real implementation.
-	fmt.Printf("Observing: %+v", cr)
+	if meta.GetExternalName(cr) == "" {
+		return managed.ExternalObservation{}, nil
+	}
+
+	r, err := c.robots.Get(ctx, meta.GetExternalName(cr))
+	if err != nil {
+		return managed.ExternalObservation{}, errors.Wrap(resource.Ignore(robots.IsNotFound, err), "cannot get external resource")
+	}
+	cr.SetConditions(v1.Available())
 
 	return managed.ExternalObservation{
-		// Return false when the external resource does not exist. This lets
-		// the managed resource reconciler know that it needs to call Create to
-		// (re)create the resource, or that it has successfully been deleted.
-		ResourceExists: true,
-
-		// Return false when the external resource exists, but it not up to date
-		// with the desired managed resource state. This lets the managed
-		// resource reconciler know that it needs to call Update.
-		ResourceUpToDate: true,
-
-		// Return any details that may be required to connect to the external
-		// resource. These will be stored as the connection secret.
-		ConnectionDetails: managed.ConnectionDetails{},
+		ResourceExists:   true,
+		ResourceUpToDate: r.Color == cr.Spec.ForProvider.Color,
 	}, nil
 }
 
@@ -140,14 +138,11 @@ func (c *external) Create(ctx context.Context, mg resource.Managed) (managed.Ext
 	if !ok {
 		return managed.ExternalCreation{}, errors.New(errNotRobot)
 	}
-
-	fmt.Printf("Creating: %+v", cr)
-
-	return managed.ExternalCreation{
-		// Optionally return any details that may be required to connect to the
-		// external resource. These will be stored as the connection secret.
-		ConnectionDetails: managed.ConnectionDetails{},
-	}, nil
+	r := &robots.Robot{
+		Name:  meta.GetExternalName(cr),
+		Color: cr.Spec.ForProvider.Color,
+	}
+	return managed.ExternalCreation{}, errors.Wrap(c.robots.Create(ctx, r), "cannot create external resource")
 }
 
 func (c *external) Update(ctx context.Context, mg resource.Managed) (managed.ExternalUpdate, error) {
@@ -155,23 +150,13 @@ func (c *external) Update(ctx context.Context, mg resource.Managed) (managed.Ext
 	if !ok {
 		return managed.ExternalUpdate{}, errors.New(errNotRobot)
 	}
-
-	fmt.Printf("Updating: %+v", cr)
-
-	return managed.ExternalUpdate{
-		// Optionally return any details that may be required to connect to the
-		// external resource. These will be stored as the connection secret.
-		ConnectionDetails: managed.ConnectionDetails{},
-	}, nil
+	r := &robots.Robot{
+		Name:  meta.GetExternalName(cr),
+		Color: cr.Spec.ForProvider.Color,
+	}
+	return managed.ExternalUpdate{}, errors.Wrap(c.robots.Update(ctx, r), "cannot create external resource")
 }
 
 func (c *external) Delete(ctx context.Context, mg resource.Managed) error {
-	cr, ok := mg.(*v1alpha1.Robot)
-	if !ok {
-		return errors.New(errNotRobot)
-	}
-
-	fmt.Printf("Deleting: %+v", cr)
-
-	return nil
+	return errors.Wrap(c.robots.Delete(ctx, meta.GetExternalName(mg)), "cannot delete external resource")
 }
