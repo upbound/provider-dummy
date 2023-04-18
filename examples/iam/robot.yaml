@@ -1,4 +1,4 @@
-apiVersion: iam.dummy.crossplane.io/v1alpha1
+apiVersion: iam.dummy.upbound.io/v1alpha1
 kind: Robot
 metadata:
   name: example

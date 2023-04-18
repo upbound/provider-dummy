@@ -1,4 +1,4 @@
-apiVersion: dummy.crossplane.io/v1alpha1
+apiVersion: dummy.upbound.io/v1alpha1
 kind: ProviderConfig
 metadata:
   name: default
