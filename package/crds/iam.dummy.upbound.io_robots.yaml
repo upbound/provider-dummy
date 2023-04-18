@@ -5,9 +5,9 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.10.0
   creationTimestamp: null
-  name: robots.iam.dummy.crossplane.io
+  name: robots.iam.dummy.upbound.io
 spec:
-  group: iam.dummy.crossplane.io
+  group: iam.dummy.upbound.io
   names:
     categories:
     - crossplane

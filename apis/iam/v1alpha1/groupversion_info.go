@@ -16,7 +16,7 @@ limitations under the License.
 
 // Package v1alpha1 contains the v1alpha1 group Sample resources of the Dummy provider.
 // +kubebuilder:object:generate=true
-// +groupName=iam.dummy.crossplane.io
+// +groupName=iam.dummy.upbound.io
 // +versionName=v1alpha1
 package v1alpha1
 
@@ -27,7 +27,7 @@ import (
 
 // Package type metadata.
 const (
-	Group   = "iam.dummy.crossplane.io"
+	Group   = "iam.dummy.upbound.io"
 	Version = "v1alpha1"
 )
 
