@@ -57,7 +57,7 @@ func main() {
 		enableExternalSecretStores = app.Flag("enable-external-secret-stores", "Enable support for ExternalSecretStores.").Default("false").Envar("ENABLE_EXTERNAL_SECRET_STORES").Bool()
 
 		// It is true by default for experimentation.
-		doNothing = app.Flag("do-nothing", "Do nothing.").Default("true").Envar("DO_NOTHING").Bool()
+		doNothing = app.Flag("do-nothing", "Do nothing.").Default("false").Envar("DO_NOTHING").Bool()
 	)
 	kingpin.MustParse(app.Parse(os.Args[1:]))
 	if *doNothing {
