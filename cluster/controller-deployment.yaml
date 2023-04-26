@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: server
-          image: xpkg.upbound.io/upbound/provider-dummy:v0.2.0
+          image: xpkg.upbound.io/upbound/provider-dummy:v0.3.0
           imagePullPolicy: IfNotPresent
           args:
             - --debug

@@ -45,7 +45,7 @@ deploy its controller separately to a cluster that can reach the external API.
 
 For every versioned release of the provider, there is a corresponding no-op
 package published with `-noop` suffix. For example, you can install the no-op
-variant of `v0.2.0` by using `v0.2.0-noop` image tag.
+variant of `v0.3.0` by using `v0.3.0-noop` image tag.
 
 See [this end to end guide](https://docs.upbound.io/knowledge-base/byoc/) for
 more details.
@@ -63,7 +63,7 @@ kind: Provider
 metadata:
   name: provider-dummy
 spec:
-    package: xpkg.upbound.io/upbound/provider-dummy:v0.2.0
+    package: xpkg.upbound.io/upbound/provider-dummy:v0.3.0
 EOF
 ```
 
