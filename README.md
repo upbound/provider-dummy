@@ -125,3 +125,21 @@ kubectl apply -f examples/iam/robots.yaml
 ```bash
 kubectl get robots
 ```
+
+### Releasing
+
+1. Create a new release branch from `main` branch with minor version, i.e. 
+   `release-0.3`, using the Github UI.
+2. Run `Tag` action in the release branch with the full version, i.e. `v0.3.0`.
+3. Run `CI` action in the release branch to build and push the images.
+4. Create another release branch called `release-0.3-noop` but this time forked
+   from the earlier release branch, i.e. `release-0.3` -> `release-0.3-noop`.
+5. Check out `release-0.3-noop` and disable the provider by default by making the
+   `app.Flag("do-nothing", "Do nothing.").Default("false") ...` line to
+    `app.Flag("do-nothing", "Do nothing.").Default("true") ...`.
+6. Push the new commit only to `release-0.3-noop` branch.
+7. Run `Tag` action in the noop release branch with the full version, i.e.
+   `v0.3.0-noop`.
+8. Run `CI` action in the noop release branch to build and push the noop images.
+
+Done!
