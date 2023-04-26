@@ -9,40 +9,33 @@ be used as its external API.
 stores the data in memory and does not persist it. See example `curl` commands
 to run by running `go run cmd/server/main.go`.
 
-## Local Setup
-
-```bash
-# This will build two images: provider-dummy and server-dummy.
-make build
-```
-
-```bash
-kind create cluster --wait 5m
-```
-
-```bash
-# This will deploy server-dummy and port-forward its service to localhost:8080.
-# And start the provider-dummy controller locally to connect to the server.
-make dev
-```
-
-```bash
-# Create your first Robot!
-kubectl apply -f examples/iam/robots.yaml
-```
-
-```bash
-kubectl get robots
-```
-
 ## Usage
 
-There are two ways you can use this provider:
-* Deploying the provider to a Crossplane control plane in no-op mode and then
+There are three ways you can use this provider:
+* Embedded: By default, the server is started as a background process when the
+  provider image is run. You can use that embedded server by pointing the provider
+  to talk to its localhost.
+* Local: Deploying the provider to a Crossplane-installed cluster and running the server
+  in the same cluster or a publicly accessible cluster.
+* No-op: Deploying the provider to a Crossplane control plane in no-op mode and then
   deploying the controller and server to a different cluster that may or may not
   be publicly accessible.
-* Deploying the provider to a Crossplane-installed cluster and running the server
-  in the same cluster or a publicly accessible cluster.
+
+### Embedded
+
+The server is started as a background process when the provider image is run so
+the only configuration we need is to point the provider to use that server.
+
+```bash
+cat <<EOF | kubectl apply -f -
+apiVersion: dummy.upbound.io/v1alpha1
+kind: ProviderConfig
+metadata:
+  name: default
+spec:
+  endpoint: http://127.0.0.1:8080
+EOF
+```
 
 ### No-Op Mode
 
@@ -74,12 +67,61 @@ spec:
 EOF
 ```
 
-Deploy the server:
+Deploy the server to `crossplane-system` namespace:
 ```bash
-kubectl apply -f cluster/server-deployment.yaml
+kubectl -n crossplane-system apply -f cluster/server-deployment.yaml
 ```
 
 Configure the provider to talk to the server:
 ```bash
-kubectl apply -f examples/providerconfig/incluster.yaml
+cat <<EOF | kubectl apply -f -
+apiVersion: dummy.upbound.io/v1alpha1
+kind: ProviderConfig
+metadata:
+  name: default
+spec:
+  endpoint: http://server-dummy.default.svc.cluster.local
+EOF
+```
+
+## Developing
+
+The provider image already includes the server and it's built just like any other
+Crossplane provider that uses `upbound/build` submodule. To build the provider,
+run the following:
+```bash
+make build
+```
+
+If you'd like to build & push a separate image of the server (useful for no-op
+and local modes), you can use the following command:
+```bash
+cd cmd/server
+docker build -t upbound/server-dummy:latest .
+```
+
+### Local Setup
+
+```bash
+# This will build two images: provider-dummy and server-dummy.
+make build
+```
+
+```bash
+kind create cluster --wait 5m
+```
+
+```bash
+# This will deploy server-dummy and port-forward its service to localhost:8080.
+# And start the provider-dummy controller locally to connect to the server.
+make dev
+```
+
+```bash
+# Create your first Robot!
+kubectl apply -f examples/iam/robots.yaml
+```
+
+```bash
+kubectl get robots
 ```
