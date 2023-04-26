@@ -93,14 +93,14 @@ func main() { //nolint:gocyclo
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}
 	})
-	log.Println("Listening on :8080")
+	log.Println("Listening on :9090")
 	log.Printf("Example commands:\n")
-	log.Printf("Create:\n\tcurl -XPOST -H \"Content-type: application/json\" -d '{\"name\": \"myrobot\", \"color\": \"green\"}' 'http://127.0.0.1:8080/robots'\n")
-	log.Printf("Get:\n\tcurl 'http://127.0.0.1:8080/robots?&name=myrobot'\n")
-	log.Printf("Update:\n\tcurl -XPUT -H \"Content-type: application/json\" -d '{\"name\": \"myrobot\", \"color\": \"yellow\"}' 'http://127.0.0.1:8080/robots?&name=myrobot'\n")
-	log.Printf("Delete:\n\tcurl -XDELETE 'http://127.0.0.1:8080/robots?&name=myrobot'\n")
+	log.Printf("Create:\n\tcurl -XPOST -H \"Content-type: application/json\" -d '{\"name\": \"myrobot\", \"color\": \"green\"}' 'http://127.0.0.1:9090/robots'\n")
+	log.Printf("Get:\n\tcurl 'http://127.0.0.1:9090/robots?&name=myrobot'\n")
+	log.Printf("Update:\n\tcurl -XPUT -H \"Content-type: application/json\" -d '{\"name\": \"myrobot\", \"color\": \"yellow\"}' 'http://127.0.0.1:9090/robots?&name=myrobot'\n")
+	log.Printf("Delete:\n\tcurl -XDELETE 'http://127.0.0.1:9090/robots?&name=myrobot'\n")
 	s := &http.Server{
-		Addr:              ":8080",
+		Addr:              ":9090",
 		Handler:           http.TimeoutHandler(http.DefaultServeMux, 10*time.Second, "timeout"),
 		ReadHeaderTimeout: 10 * time.Second,
 		ReadTimeout:       10 * time.Second,

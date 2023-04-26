@@ -20,7 +20,7 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
-              containerPort: 8080
+              containerPort: 9090
 ---
 apiVersion: v1
 kind: Service
@@ -31,5 +31,5 @@ spec:
       app: server-dummy
   ports:
     - port: 80
-      targetPort: 8080
+      targetPort: 9090
       protocol: TCP

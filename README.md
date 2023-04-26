@@ -33,7 +33,7 @@ kind: ProviderConfig
 metadata:
   name: default
 spec:
-  endpoint: http://127.0.0.1:8080
+  endpoint: http://127.0.0.1:9090
 EOF
 ```
 
@@ -112,7 +112,7 @@ kind create cluster --wait 5m
 ```
 
 ```bash
-# This will deploy server-dummy and port-forward its service to localhost:8080.
+# This will deploy server-dummy and port-forward its service to localhost:9090.
 # And start the provider-dummy controller locally to connect to the server.
 make dev
 ```

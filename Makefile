@@ -100,7 +100,7 @@ dev: $(KUBECTL)
 	@$(KUBECTL) apply -f examples/providerconfig/local.yaml
 	@$(OK) Creating ProviderConfig
 	@$(INFO) Port-forwarding to dummy server
-	@$(KUBECTL) port-forward svc/server-dummy 8080:80 &
+	@$(KUBECTL) port-forward svc/server-dummy 9090:80 &
 	@$(OK) Port-forwarding to dummy server
 	@$(INFO) Starting Provider Dummy controllers
 	@DO_NOTHING=false $(GO) run cmd/provider/main.go --debug

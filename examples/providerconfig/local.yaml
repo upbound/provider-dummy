@@ -3,4 +3,4 @@ kind: ProviderConfig
 metadata:
   name: default
 spec:
-  endpoint: http://127.0.0.1:8080
+  endpoint: http://127.0.0.1:9090
