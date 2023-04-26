@@ -1,10 +1,11 @@
-FROM golang:1.19-alpine AS builder
+FROM golang:1.20.3-alpine AS builder
 
 ARG TARGETOS
 ARG TARGETARCH
 
 WORKDIR /stage
 COPY . /stage
+RUN go mod tidy
 
 RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o /stage/bin/${TARGETOS}_${TARGETARCH}/server .
 
