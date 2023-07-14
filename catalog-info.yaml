@@ -1,0 +1,14 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: provider-dummy
+  description: "A dummy @crossplane provider together with its external API for experimentation"
+  links:
+    - url: https://github.com/upbound/provider-dummy/blob/main/README.md
+      title: Provider dummy Quickstart
+  annotations:
+    github.com/project-slug: upbound/provider-dummy
+spec:
+  type: service
+  lifecycle: production
+  owner: team:extensions
